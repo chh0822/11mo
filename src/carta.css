@@ -1,0 +1,338 @@
+.escenario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #ffe6e6;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  z-index: 0; 
+}
+
+/* --- CAPA MEDIA (10): EL SOBRE Y LA CARTA --- */
+.sobre {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  z-index: 10; /* Subimos el sobre a la capa 10 */
+}
+
+.sobre:hover {
+  transform: translateY(-5px);
+}
+
+.parte-trasera, .parte-frontal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.parte-trasera {
+  background-color: #d9534f;
+  z-index: 1;
+}
+
+.parte-frontal {
+  background-color: #c9302c;
+  z-index: 3;
+  clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+}
+
+.solapa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #e24743;
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+  z-index: 4;
+  transform-origin: top;
+  transition: transform 0.6s ease-in-out;
+}
+
+.carta {
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  background-color: white;
+  z-index: 2; 
+  border-radius: 5px;
+  padding: 15px;
+  box-sizing: border-box;
+  text-align: center;
+  /* --- NUEVO: Completamente invisible al estar cerrada --- */
+  opacity: 0; 
+  pointer-events: none; /* Evita que el botón se clickee accidentalmente estando oculto */
+  /* --- NUEVO: Añadida la transición de opacidad --- */
+  transition: transform 0.6s ease-in-out, height 0.6s, z-index 0.6s, opacity 0.4s ease-in-out; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.carta h2 {
+  color: #d9534f;
+  font-size: 1.2rem;
+  margin-top: 0;
+}
+
+.carta p {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Animaciones de la carta al abrir */
+.sobre.abierto .solapa {
+  transform: rotateX(180deg);
+  z-index: 1; 
+}
+
+.sobre.abierto .carta {
+  /* --- NUEVO: Sube más (-150px en lugar de -120px) para compensar que es más larga --- */
+  transform: translateY(-150px);
+  /* --- NUEVO: Hoja mucho más larga (180% en lugar de 140%) --- */
+  height: 180%; 
+  z-index: 5; 
+  /* --- NUEVO: Aparece visible al abrir el sobre --- */
+  opacity: 1; 
+  pointer-events: auto; /* Reactiva los clics en la carta */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* --- NUEVA CAPA MEDIA (5): MEMORIAS FLOTANTES (FOTOS Y CANCIÓN) --- */
+.centro-memorias {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  display: block;
+  /* Está detrás de la carta abierta (10), pero delante del fondo (-1) */
+  z-index: 5; 
+  pointer-events: none;
+}
+
+.memoria-flotante {
+  position: absolute;
+  width: 140px; 
+  opacity: 0;
+  transform-origin: center center;
+  /* Le damos un toque de foto física o widget */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  border-radius: 12px;
+  overflow: hidden; 
+  border: 4px solid white; 
+  background-color: white; 
+  
+  /* Animación con rebote sutil */
+  animation: saltarMemoria 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) var(--retraso) forwards;
+}
+
+.memoria-flotante img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+@keyframes saltarMemoria {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.1) rotate(0deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(calc(var(--final-x) * 1.1 - 50%), calc(var(--final-y) * 1.1 - 50%)) scale(1.1) rotate(calc(var(--rotacion) * 1.5));
+  }
+  100% {
+    opacity: 1; 
+    transform: translate(calc(var(--final-x) - 50%), calc(var(--final-y) - 50%)) scale(1) rotate(var(--rotacion));
+  }
+}
+
+/* --- CAPA ALTA (20): FLORES GIGANTES (DELANTE DE LA CARTA) --- */
+.centro-espiral {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  display: block; 
+  z-index: 20; /* CRUCIAL: Ahora están en la capa 20, tapando la carta (capa 10) */
+  pointer-events: none; /* Asegura que, aunque pasen por encima, no bloqueen tus clics */
+}
+
+.flor-animada {
+  position: absolute; 
+  width: 400px; /* Tamaño gigante */
+  height: 400px;
+  opacity: 0;
+  transform-origin: center center; 
+  pointer-events: none;
+  
+  animation: 
+    espiralOut 1.5s ease-out var(--retraso-salida) forwards,
+    caerFlores 4s ease-in var(--retraso-caida) forwards;
+}
+
+/* Regla general de imágenes */
+.imagen-petalo, .petalo-backdrop img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+  pointer-events: none;
+}
+
+@keyframes espiralOut {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.1) rotate(0deg); }
+  100% { opacity: 1; transform: translate(calc(var(--destino-x) - 50%), calc(var(--destino-y) - 50%)) scale(1) rotate(360deg); }
+}
+
+@keyframes caerFlores {
+  0% { opacity: 1; transform: translate(calc(var(--destino-x) - 50%), calc(var(--destino-y) - 50%)) scale(1) rotate(360deg); }
+  100% { opacity: 0; transform: translate(calc(var(--destino-x) - 50%), calc(100vh + var(--destino-y))) scale(0.8) rotate(720deg); }
+}
+
+/* --- CAPA MÁS PROFUNDA (-1): PÉTALOS DE FONDO (DETRÁS DE LA CARTA) --- */
+.fondo-petalos-backdrop {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: -1; /* CRUCIAL: Capa -1, siempre estarán detrás de todo */
+  pointer-events: none;
+}
+
+.petalo-backdrop {
+  position: absolute;
+  width: 250px; /* Tamaño pequeño */
+  height: 250px;
+  top: var(--pos-y);
+  left: var(--pos-x);
+  
+  transform: translate(-50%, -50%) scale(var(--scale)) rotate(var(--rotation));
+  opacity: 0;
+  pointer-events: none;
+  
+  animation: 
+    aparecerBackdrop 1s ease-out var(--delay) forwards,
+    balanceoBackdrop 6s ease-in-out var(--delay) infinite alternate;
+}
+
+@keyframes aparecerBackdrop {
+  to { opacity: 0.6; }
+}
+
+@keyframes balanceoBackdrop {
+  from { transform: translate(-50%, -50%) scale(var(--scale)) rotate(var(--rotation)) translateX(-5px); }
+  to { transform: translate(-50%, -50%) scale(var(--scale)) rotate(var(--rotation)) translateX(5px); }
+}
+
+/* --- CAPA SUPERIOR (30): GALERÍA DE FOTOS --- */
+.galeria-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 30; /* Por encima de TODO */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: aparecer 0.3s ease-out;
+}
+
+/* Estilos de botones y galería */
+.boton-galeria {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out, transform 0.2s;
+  pointer-events: none; 
+}
+
+.sobre.abierto .boton-galeria {
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0.6s; 
+}
+
+.boton-galeria:hover {
+  transform: scale(1.05);
+  background-color: #c9302c;
+}
+
+.galeria-contenido {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 85%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  text-align: center;
+}
+
+.galeria-contenido h3 {
+  color: #c9302c;
+  margin-top: 0;
+}
+
+.boton-cerrar {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.boton-cerrar:hover {
+  color: #333;
+}
+
+.grilla-fotos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* --- ESTILOS ESTRICTOS PARA LAS FOTOS DE LA GALERÍA --- */
+.foto-galeria {
+  width: 100%;
+  height: 140px; /* Fuerza la altura para que todas se vean iguales */
+  max-width: 100%; /* Evita que se salgan de su columna */
+  object-fit: cover; /* Magia: recorta la foto para que no se estire ni se deforme */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.foto-galeria:hover {
+  transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
