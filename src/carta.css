@@ -93,15 +93,15 @@
 }
 
 .sobre.abierto .carta {
-  /* --- NUEVO: Sube más (-150px en lugar de -120px) para compensar que es más larga --- */
-  transform: translateY(-150px);
-  /* --- NUEVO: Hoja mucho más larga (180% en lugar de 140%) --- */
-  height: 180%; 
+  /* --- CAMBIO: Bajamos un poco el translateY para que no se suba tanto --- */
+  transform: translateY(-90px); 
+  /* --- CAMBIO: Ajustamos la altura a 130% para que no sea tan gigante y entre completa --- */
+  height: 130%; 
   z-index: 5; 
-  /* --- NUEVO: Aparece visible al abrir el sobre --- */
   opacity: 1; 
-  pointer-events: auto; /* Reactiva los clics en la carta */
+  pointer-events: auto; 
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  overflow-y: auto; /* Por si el texto es largo, permitirá hacer scroll interno suave */
 }
 
 /* --- NUEVA CAPA MEDIA (5): MEMORIAS FLOTANTES (FOTOS Y CANCIÓN) --- */

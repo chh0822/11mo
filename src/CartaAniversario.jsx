@@ -44,7 +44,7 @@ export default function CartaAniversario() {
         const angulo = (Math.PI * 2 * i) / archivosMemorias.length + (Math.random() * 0.5);
         
         // --- CAMBIO AQUÍ: Radio mucho más amplio para alejar las imágenes del centro ---
-        const radio = 280 + Math.random() * 80; 
+        const radio = 130 + Math.random() * 80; 
         
         return {
           id: `memo-${i}`,
