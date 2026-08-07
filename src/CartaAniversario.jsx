@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Carta.css';
+import './carta.css';
 
 export default function CartaAniversario() {
   const [abierta, setAbierta] = useState(false);
